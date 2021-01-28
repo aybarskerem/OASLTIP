@@ -1,0 +1,3 @@
+RealWorldEnvironment_Experiments folder contains experiments done in the real world environment using real world RSSI and simulation-generated RSSI data.
+
+This folder will be updated to include all the experiment codes like material type/thickness, #of receiver placement, multiple POI (person of interest/person we track) tracking etc with all the automation codes (written in Bash.)
