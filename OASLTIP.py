@@ -115,11 +115,18 @@ rssiAtOne=TX_Power-65 # How much RSSI values is received when a receiver device 
 # Use predefined position only if you know the trajectory of the POI (Only usable in off-line usage of the OASLTIP algorithm)
 predefinedPos=np.array([ [13,10.5], [12.5,9.7], [12,9.1], [11.5,8.5], [11.2,7.5],[11.2,6.6] ,[11,5.6], [10.5,4.8], [10.2,4.5], [9.5,4.1], [8.5,4.3], [7.7,4.5], [6.8,5.3],[6.3,6.1],[6.0,6.9],[5.3,7.3] ] )
 
-fingerPrintingBeaconPositions=np.array( [ [0.25,3],  [5,   5.5   ], [11.5,   3.5   ], [12.5, 9   ] ] )
-fingerPrintingSignalStrengthBeaconsToReceivers=np.array([ [ -76, -73, -86, -82    ], [ -84, -81, -67, -72   ], [ -83, -77, -85, -89   ] ]) # 4 Beacon to each of the 3 receivers
-InterpolatedMapForReceivers=None
-RSSIinFP={} # make it a dictionary where the key is 2d position
-FP_coeff=0 #  set it to a value >0 and <=1 if fingerprinting SHALL BE TAKEN INTO ACCOUNT in OASLTIP algorithm
+# Set UseFingerPrintingInOASLTIP to True to use fingerprinting (FP) info in OASLTIP 
+# and set the FP variables below according to the setup used. Set UseFingerPrintingInOASLTIP to False if FP is
+# not to be used in OASLTIP algorithm to make the code run faster
+UseFingerPrintingInOASLTIP=False  
+if UseFingerPrintingInOASLTIP: # set FP related variables globally if UseFingerPrintingInOASLTIP is True
+	global fingerPrintingBeaconPositions, fingerPrintingSignalStrengthBeaconsToReceivers, InterpolatedMapForReceivers, RSSIinFP, FP_coeff
+	fingerPrintingBeaconPositions=np.array( [ [0.25,3],  [5,   5.5   ], [11.5,   3.5   ], [12.5, 9   ] ] )
+	fingerPrintingSignalStrengthBeaconsToReceivers=np.array([ [ -76, -73, -86, -82    ], [ -84, -81, -67, -72   ], [ -83, -77, -85, -89   ] ]) # 4 Beacon to each of the 3 receivers
+	InterpolatedMapForReceivers=None
+	RSSIinFP={} # make it a dictionary where the key is 2d position
+	FP_coeff=0.2 #  set it to zero if fingerprinting info SHALL NOT BE TAKEN INTO ACCOUNT in OASLTIP algorithm
+
 
 ################################################# OASLTIP PARAMETERS FINISHED  ################################################# 
 
@@ -146,7 +153,8 @@ def main():
     blockMaterials=np.random.choice(materials, numberOfBlocks) # Comment out this line to let the simulation place the blocks inside the indoor environment
     roomMaterials=np.random.choice(materials, numberOfRooms)   # Comment out this line to let the simulation place the rooms inside the indoor environment
 
-    interpolateFingerPrintingResult()
+    if UseFingerPrintingInOASLTIP:
+    	interpolateFingerPrintingResult()
 
     print("totalIterNo chosen as: ", totalIterNo)
     # track each POI in a new process
@@ -673,7 +681,8 @@ def custom_minimize(RSSIofReceivers, receiverPositions,xdims,ydims,sensitivityOf
                     if receiverMeanRoomIntersection is not None:
                         strengtheningAmount+=np.linalg.norm(receiverMeanRoomIntersection[0,:]-receiverMeanRoomIntersection[1,:]) * WallRoomRatio * material_SignalDisturbance_Coefficients[ roomMaterials[roomIndex] ]   
                 
-                xyDistToRecInFP = RSSI_to_distance(RSSIinFP[i,x,y] + strengtheningAmount )
+                if UseFingerPrintingInOASLTIP:
+                	xyDistToRecInFP = RSSI_to_distance(RSSIinFP[i,x,y] + strengtheningAmount )
                 xyDistToRec = np.linalg.norm( [x,y] - receiverPositions[i] )
                 # Rule 1) PUNISH THE x,y points whose distances are not compatible with the RSSI values we receive.
                 # Rule 2) Punish more when distToReceiverGivenRSSI is low since low distToReceiverGivenRSSI means high RSSI and high RSSIs are reliable.
@@ -682,9 +691,9 @@ def custom_minimize(RSSIofReceivers, receiverPositions,xdims,ydims,sensitivityOf
                     distToReceiverGivenRSSI=RSSI_to_distance( RSSIofReceivers[i] + strengtheningAmount) + safetyOffset
                     tmp_sum+=( abs( xyDistToRec - distToReceiverGivenRSSI ) / distToReceiverGivenRSSI ) ** 2 
                     
-                    
-                    if abs( RSSIofReceivers[i] - RSSIinFP[i,x,y] ) > maxSignalError: # if the difference is more than 5dBm for example:
-                        tmp_sum+=FP_coeff*(  abs( xyDistToRecInFP - distToReceiverGivenRSSI ) / distToReceiverGivenRSSI  ) ** 2
+                    if UseFingerPrintingInOASLTIP:
+	                    if abs( RSSIofReceivers[i] - RSSIinFP[i,x,y] ) > maxSignalError: # if the difference is more than 5dBm for example:
+	                        tmp_sum+=FP_coeff*(  abs( xyDistToRecInFP - distToReceiverGivenRSSI ) / distToReceiverGivenRSSI  ) ** 2
 
                 # Rule 1) PUNISH THE x,y points which are close to the receivers since x,y should not be close if our receivers cannot catch a signal
                 else:  # If a receiver device (RSSIofReceivers[i]) is not able to catch a signal for the current time step
@@ -692,8 +701,9 @@ def custom_minimize(RSSIofReceivers, receiverPositions,xdims,ydims,sensitivityOf
                     if xyDistToRec < maxCatchableSignalDistance: # we see it as None, so it should not be closer than maxCatchableSignalDistance. If so, then punish
                         tmp_sum+=( abs( xyDistToRec - maxCatchableSignalDistance )  / xyDistToRec ) ** 2                    
                     
-                    if xyDistToRecInFP - maxCatchableSignalDistance: 
-                        tmp_sum+=FP_coeff*(  abs( xyDistToRecInFP - maxCatchableSignalDistance ) / xyDistToRecInFP ) ** 2
+                    if UseFingerPrintingInOASLTIP:
+	                    if xyDistToRecInFP - maxCatchableSignalDistance: 
+	                        tmp_sum+=FP_coeff*(  abs( xyDistToRecInFP - maxCatchableSignalDistance ) / xyDistToRecInFP ) ** 2
 
             if tmp_sum < mysum:
                 mysum = tmp_sum
