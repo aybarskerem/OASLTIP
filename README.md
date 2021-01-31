@@ -3,6 +3,7 @@ A wireless indoor positioning system that uses BLE signals.
 
 1) CODE DESCRIPTION:
 =====================
+
 "OASLTIP.py" is the base code that includes all functionalities of the OASLTIP. This script includes whole OASLTIP algorithm and the OASLTIP simulation tool which simulates this algorithm visually. 
 
 The visuals in the thesis made adjusting some variables and lines of this base code.
@@ -19,6 +20,7 @@ For any questions related to the code, please reach me out at akeremtaskan@gmail
 
 2) CODE REQUIREMENTS:
 =====================
+
 -> Usage of Python2 is required (>=2.7)
 -> Code is confirmed to run on Ubuntu 16.04 and 20.04.1.
 -> The following libraries are required to run the code: 
