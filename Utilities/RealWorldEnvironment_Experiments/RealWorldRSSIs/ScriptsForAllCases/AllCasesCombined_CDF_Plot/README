@@ -1,1 +1,0 @@
-python calculate_mean_std_realworld.py 50samples_1619_groundtruth_between_8_67_inpocket_crowded.txt 1619_mu_6.txt 50samples_1707_groundtruth_between_1_60_inhand_crowded.txt 1707_mu_4.txt 50samples_1841_groundtruth_between_5_64_inpocket_noncrowded.txt 1841_mu_6.txt 

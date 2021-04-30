@@ -1,3 +1,30 @@
-RealWorldEnvironment_Experiments folder contains experiments done in the real world environment using real world RSSI and simulation-generated RSSI data.
+This "Utilities" folder contains all the experiments made for the OASLTIP algorithm.
 
-This folder will be updated to include all the experiment codes like material type/thickness, #of receiver placement, multiple POI (person of interest/person we track) tracking etc with all the automation codes (written in Bash.)
+Please run:
+"bash runAll_create_scripts.sh" to run all the scripts which generate all the plots and visualizations regarding the OASLTIP algorithm.
+
+After this script finishes running, all the plots can be found in their corresponding folder. For example; the plots showing how #of receivers (frequency of receivers) affect the accuracy of the OASLTIP algorithm, one can check the plots in byFreq folder.
+
+There is a variable named "NUMBER_OF_REPEATS" in "runAll_create_scripts.sh". This represents the #of times we like to run the experiments (for the experiments in which this is applicable) so that we are not biased towards only one run. Then we calculate the standard deviation and mean of these runs. This variable is set to "20" for our experiments, but this can be reduced to speed up or increased to get a more averaged result (less biased).
+
+
+================================================
+1) THEORETICAL EXPERIMENTS:
+
+These experiments are included in "byFreq", "byMaterialThickness", "byPastCoeff", "bySensitivity", "bySignalNoise", "multilateration_and_trajectory", "multiplePOITracking", "receiverPositioning" and "Wi-Fi_test" folders.
+
+* The scripts to show the effect of #of receivers (frequency of receivers), effect of material and thickness of the material, effect of past coefficient (how much of the past movement should we take into account for the current time step's positioning calculation), effect of "sensitivity" parameter (the distance between each search point for multilateration) and the effect of signal noise can be found in "byFreq", "byMaterialThickness", "byPastCoeff",  "bySensitivity" and "bySignalNoise" folders respectively.
+
+* The scripts showing the accuracy of the multilateration for different office sizes can be found in "multilateration_and_trajectory" folder.
+
+* The scripts showing how we are able to track multiple people at the same time using the OASLTIP algorithm can be found in "multiplePOITracking" folder.
+
+* The scripts showing how one can position the receivers in the most efficient way as possible given an environment (rectangular) can be found in "receiverPositioning" folder.
+
+* The scripts drawing the plots which show the effect of blocks on electromagnetic signals (Wi-Fi signals in our experiments) can be found in "Wi-Fi_test" folder. 
+
+================================================
+2) PRACTICAL EXPERIMENTS (REAL WORLD EXPERIMENTS):
+These experiments are included in "realWorldEnvironment_Experiments" folder.
+
+* The scripts showing how the OASLTIP algorithm works IN PRACTICE (in real world) can be found in "realWorldEnvironment_Experiments" folder. 
