@@ -16,6 +16,8 @@ Moreover, in "Utilities/realWorldEnvironment_Experiments" folder; the variation 
 
 There are also automation scripts written in Bash, running the OASLTIP algorithm for various different setups by running each setup 20 times and then calculates the mean and standard deviation of all the errors. Afterwards, these scripts produce error line segments on bar charts. These scripts will hopefully be available in a month under "Utilities" folder in the coresponding folders depending on the experiment type. These scripts are only used for visualizing the errors of "OASLTIP" algorithm with bar charts for various different setups and has NO OTHER RELATION to the "OASLTIP" algorithm (these are separate scripts used locally to produce bar charts using OASLTIP and not a part of OASLTIP algorithm)
 
+Please read the README files in Utilities and Utilities/realWorldEnvironment_Experiments folders for more clarification.
+
 For any questions related to the code, please reach me out at akeremtaskan@gmail.com.
 
 **********************
