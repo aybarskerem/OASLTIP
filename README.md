@@ -23,19 +23,20 @@ For any questions related to the code, please reach me out at akeremtaskan@gmail
 **********************
 2) CODE REQUIREMENTS:
 
--> Usage of Python2 is required (>=2.7)  
--> Code is confirmed to run on Ubuntu 16.04 and 20.04.1.  
--> The following libraries are required to run the code:   
-numpy  
-matplotlib.pyplot  
-tkinter (python-tk)  
-scipy  
-filterpy  
-sklearn  
-shapely  
-dvipng  
+- Usage of Python2 is required (>=2.7)  
+- Code is confirmed to run on Ubuntu 16.04 and 20.04.1.  
+- The following libraries are required to run the code:   
+  - numpy  
+  - matplotlib.pyplot  
+  - tkinter (python-tk)  
+  - scipy  
+  - filterpy  
+  - sklearn  
+  - shapely  
+  - dvipng  
 
--> The packages/libraries can be installed by running the commands below in terminal:  
+- The packages/libraries can be installed by running the commands below in terminal:  
+```
 pip install numpy  
 python -m pip install -U matplotlib  
 sudo apt install python-tk  
@@ -44,4 +45,4 @@ python -m pip install -U filterpy
 python -m pip install -U sklearn  
 python -m pip install -U shapely  
 sudo apt install dvipng texlive-latex-extra texlive-fonts-recommended  
-
+```
